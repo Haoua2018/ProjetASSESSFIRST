@@ -1,4 +1,4 @@
 package PageObjects;
 
-public class PageCreationCompte {
+public class PageCreationCompte extends Page {
 }
