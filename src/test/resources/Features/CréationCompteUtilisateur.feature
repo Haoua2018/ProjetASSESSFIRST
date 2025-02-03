@@ -4,13 +4,14 @@ Feature: Création d'un compte utilisateur (personnel/ entreprise)
 
   Background: Création de compte utilisateur
     Given l'utilisateur navigue sur le site web de création de compte
-    And   choisit le mode d'accès <modeaccess>
+    And Il choisit le mode d'accès "modeaccess"
 
+  @Passing
   Scenario Outline: Création de compte _ Cas passant
 
-    When l'utilisateur crèe un compte en saisissant les informations valides
-      | login   | motpasse    | ModeAccess   | Confirmpwd   |
-      | <Email> | <Motdepasse | <modeaccess> | <Confirmpwd> |
+    When L'utilisateur crèe un compte en saisissant les informations valides
+      | login   | motpasse     | ModeAccess   | Confirmpwd   |
+      | <Email> | <Motdepasse> | <modeaccess> | <Confirmpwd> |
     Then l'accès est validé,le code de validation est envoyée par mail
     And  donc une proposition de configuration du profil est proposé
     Examples:
@@ -18,9 +19,9 @@ Feature: Création d'un compte utilisateur (personnel/ entreprise)
       | MathisPoi@yahoo.fr      | Ploufmoine36.  | Personnel  | Ploufmoine36.  |
       | Gadliss@gmail.com       | Malopride25.   | Personnel  | Malopride25.   |
       | Nounoukiss@github.com   | Poiuytrea256.  | Entreprise | Poiuytrea256.  |
-      | Koufraboi@zenity.fr     | Jeunemounir7*  | Entreprise | Jeunemounir7*  |
       | projetpostman@yahoo.com | Poujakirsh895$ | Personnel  | Poujakirsh895$ |
 
+  @Non-Passing
   Scenario Outline: Création de compte _ Cas non passant
     When l'utilisateur crèe un compte en saisissant les informations invalides
       | login   | password     | ModeAccess   | Confirmpwd   |

@@ -7,14 +7,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 public class Page {
-    protected static WebDriver driver= WebDriverSingleton.getInstance();
+    protected static WebDriver driver= WebDriverSingleton.getInstance("");
     final String BASEURL="https://welcome.assessfirst.com";
     final  String RegisterURL="https://welcome.assessfirst.com/register";
     final  String LOGINURL="https://welcome.assessfirst.com/login";
     final String ACTIVECOMPTEURL="https://welcome.assessfirst.com/register/activation";
     final String CONFIGPROFILURLperso="https://welcome.assessfirst.com/register/personal/introduce";
     final String COMPLETUDEPROFILURLperso="https://welcome.assessfirst.com/onboarding/who-are-you";
-
+    public final String SIGNUPperso="https://welcome.assessfirst.com/register/personal/sign-up";
     public Page()
     {
         PageFactory.initElements(driver,this);

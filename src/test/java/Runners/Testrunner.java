@@ -8,26 +8,26 @@ import io.cucumber.core.runner.*;
 import io.cucumber.java.en.*;
 import io.cucumber.core.api.*;
 import org.openqa.selenium.WebDriver;
-import cucumber.api.*;
+import org.testng.annotations.*;
 //@RunWith
 
 @CucumberOptions
         (
                 features = "./src/test/resources/Features",
                 glue = {"StepsDefinitions"},
-                plugin = {"pretty", "html:target/cucumber-pretty"},
-                tags = "@WithMedia"
+                plugin = {  "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm","pretty", "html:target/cucumber-pretty"},
+                tags = "@Passing"
 
         )
 
 public class Testrunner extends AbstractTestNGCucumberTests {
 
-    @Before
+    @BeforeTest
     public void init() {
-        WebDriverSingleton.getInstance();
+        WebDriverSingleton.getInstance("");
     }
 
-    @After
+    @AfterTest
     public void quitter() {
         WebDriverSingleton.destroy();
     }
