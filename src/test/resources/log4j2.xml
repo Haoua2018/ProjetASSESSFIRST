@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="DEBUG">
-<Appenders>
-    <Console name="LogToConsole" target="SYSTEM_OUT">
-        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </Console>
-</Appenders>
-<Loggers>
-    <!-- avoid duplicated logs with additivity=false -->
-    <Logger name="com.mkyong" level="debug" additivity="false">
-        <AppenderRef ref="LogToConsole"/>
-    </Logger>
-    <Root level="error">
-        <AppenderRef ref="LogToConsole"/>
-    </Root>
-</Loggers>
-</Configuration>
 <!--<Configuration status="DEBUG">
 <Appenders>
     <Console name="LogToConsole" target="SYSTEM_OUT">
@@ -22,7 +6,7 @@
     </Console>
 </Appenders>
 <Loggers>
-     avoid duplicated logs with additivity=false
+   avoid duplicated logs with additivity=false
     <Logger name="com.mkyong" level="debug" additivity="false">
         <AppenderRef ref="LogToConsole"/>
     </Logger>
@@ -30,5 +14,27 @@
         <AppenderRef ref="LogToConsole"/>
     </Root>
 </Loggers>
-</Configuration>
--->
+</Configuration>-->
+<Configuration status="DEBUG">
+<Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    </Console>
+    <File name="File" fileName="Logger/app.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level: %msg%n</Pattern>
+            </PatternLayout>
+        </File>
+</Appenders>
+<Loggers>
+      <Root level="info">
+    <AppenderRef ref="Console"/>
+    <AppenderRef ref="File"/>
+       </Root>
+    <Root level="error">
+    <AppenderRef ref="Console"/>
+        <AppenderRef ref="File"/>
+
+</Root>
+    </Loggers>
+    </Configuration>

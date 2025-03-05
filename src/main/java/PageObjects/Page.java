@@ -8,39 +8,30 @@ import org.testng.Reporter;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
+import static Managers.WebDriverSingleton.driver;
+import static Managers.WebDriverSingleton.getInstance;
+import static org.openqa.selenium.support.PageFactory.*;
+
 @Parameters( { "browser" } )
 
 public class Page  {
     final public String BASEURL="https://welcome.assessfirst.com";
     final public String RegisterURL="https://welcome.assessfirst.com/register";
-    final  String LOGINURL="https://welcome.assessfirst.com/login";
-    final String ACTIVECOMPTEURL="https://welcome.assessfirst.com/register/activation";
+    final public String LOGINURL="https://welcome.assessfirst.com/login";
+    final public String ACTIVECOMPTEURL="https://welcome.assessfirst.com/register/activation";
     final String CONFIGPROFILURLperso="https://welcome.assessfirst.com/register/personal/introduce";
-    final String COMPLETUDEPROFILURLperso="https://welcome.assessfirst.com/onboarding/who-are-you";
-    final String SIGNUPperso="https://welcome.assessfirst.com/register/personal/sign-up";
+    final public String COMPLETUDEPROFILURLperso="https://welcome.assessfirst.com/onboarding/who-are-you";
+    final public String SIGNUPperso="https://welcome.assessfirst.com/register/personal/sign-up";
+final public String CREATIONEnterpriseURL="https://welcome.assessfirst.com/register/business/credentials";
+    final public String CREATIONPersoURL="https://welcome.assessfirst.com/register/personal/credentials";
 
     public static String browser;
-         //= String.valueOf(Parameters.class);
 
-    protected static WebDriver driver;
+   public static WebDriver driver;
 
-    static {
-        try {
-            Reporter.log("Browser value");
-            System.out.println(browser);
-            driver = WebDriverSingleton.getInstance(browser);
-            if (driver==null)
-            {Reporter.log("Echec création driver dans page");}
-            else
-            { Reporter.log("Réussite de la création du driver page");
-            System.out.println(driver); }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Page()   {
-        PageFactory.initElements(driver,this);
+    public Page(WebDriver driver1)   {
+        driver=driver1;
+        initElements(driver,this);
                     }
 
 

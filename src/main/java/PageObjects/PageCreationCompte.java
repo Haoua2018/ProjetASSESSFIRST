@@ -1,11 +1,15 @@
 package PageObjects;
+
+import Managers.WebdriverFactory;
 import PageObjects.Page;
 import Managers.WebDriverSingleton;
 import org.apache.logging.log4j.*;
-        //Assert;
+//Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Reporter;
@@ -14,24 +18,25 @@ import org.testng.annotations.Parameters;
 import java.time.Duration;
 import java.util.List;
 
+import static Managers.WebDriverSingleton.*;
+import static Managers.WebDriverSingleton.driver;
+
 @Parameters({"browser"})
 
 public class PageCreationCompte extends Page {
-
-    private static final Logger log = LoggerFactory.getLogger(PageCreationCompte.class);
-    @FindBy(xpath = "//a[@data-cy='register-personal-card']")
-    //      "data-cy='register-personal-card'")
+    static org.apache.logging.log4j.Logger log = LogManager.getLogger(WebdriverFactory.class);
+    private static final Logger log2 = LoggerFactory.getLogger(PageCreationCompte.class);
+    //@FindBy(xpath = "//a[@data-cy='register-personal-card']")
     private WebElement Personnel;
     //  @FindBy(linkText = "https://welcome.assessfirst.com/register/business")
-    //@FindBy(xpath = "//a[@data-cy='register-business-desc']")
-    //classname="grid_gap-4"
-    //@FindBy(css="a[href='/register/business']")
-    //@FindBy(className="grid_gap-4")
-    //private List <WebElement>   divEnt;
-    @FindBy(xpath = "//a[@data-cy='register-business-card']")
+    @FindBy(xpath = "//button[@data-cy='sign-up-button']")
+    private WebElement InscriptionCredBtnperso;
 
+    //@FindBy(className="grid_gap-4")
+    @FindBy(css = "div.grid.gap-4>a")
+    private List<WebElement> divEnt;
+    //@FindBy(xpath = "//a[@data-cy='register-business-card']")
     private WebElement Entreprise;
-            //= divEnt.getLast();
     @FindBy(linkText = "C'est parti !")
     private WebElement CpartiBtnperso;
     @FindBy(linkText = "Inscrivez-vous avec un email")
@@ -44,71 +49,92 @@ public class PageCreationCompte extends Page {
     private WebElement InputConfirmMotpasse;
     @FindBy(xpath = "/html/body/div[2]/div/div[1]/div/form/button")
     private WebElement InscrireBtn;
-    @FindBy(tagName = "placeholder='utilisateur@email.com'")
+    @FindBy(name = "email")
     private WebElement InputEmailEnterprise;
-
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     public String currentURL, personURL, entrepriseURL;
-    private WebDriver driverG;
+    //private WebDriver driverG;
     PageCreationCompte creapage;
     //if ()
     final public String RegisterURL = "https://welcome.assessfirst.com/register";
 
-    public PageCreationCompte() {
-        this.driverG=driver;
-        /*if(creapage == null){
-            creapage=new PageCreationCompte();
-        }*/
-      log.info("Création 1");
+    public PageCreationCompte(WebDriver drver) {
+
+        super(drver);
+        //this.driver=driver;
+        log.info("Page crée");
     }
 
-    // public PageCreationCompte() throws Exception {
+    public void NavigateToregisterpage() throws Exception {
+        //driver;
+        //driver = WebDriverSingleton.getInstance(browser);
+        //driver.get(BASEURL);
+        //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
-    //}
-
-    public void NavigateToregisterpage( ) throws Exception {
-        driverG = driver;
-        creapage = new PageCreationCompte();
-
-                //creapage.driverG;
-        //driverG= WebDriverSingleton.getInstance(browser);
-        // driverG.get(page.BASEURL);
-
-        if(driverG==null){
+        //  driver.navigate().to(RegisterURL);
+        if (driver == null) {
             Reporter.log("driver is null");
         }
-        driverG.navigate().to(RegisterURL);
+        driver.navigate().to(RegisterURL);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
         Thread.sleep(6000);
+        log2.info("Validation cookies en cours");
+        try {
+            // Attente explicite pour que le bouton "Accepter" soit visible
+            WebElement acceptButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("axeptio_btn_acceptAll")));
 
+            // Clique sur le bouton des cookies
+            acceptButton.click();
+            System.out.println("Cookies acceptés.");
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la validation des cookies: " + e.getMessage());
+        }
     }
 
     public String ReturnTitle() {
-        driverG = creapage.driverG;
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        return driver.getTitle();
 
-        String titre = driverG.getTitle();
-        return titre;
     }
 
     public void Profilchoice(String choix) throws InterruptedException {
-        driverG = creapage.driverG;
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        personURL = "https://welcome.assessfirst.com/register/personal";
+        entrepriseURL = "https://welcome.assessfirst.com/register/business";
+        JavascriptExecutor js = (JavascriptExecutor) driver;
 
+        //wait.until(ExpectedConditions.elementToBeClickable(By.className("div.grid.gap-4")));
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("div.grid.gap-4")));
+        Personnel = divEnt.getFirst();
+        Entreprise = divEnt.getLast();
         switch (choix) {
             case "Personnel":
                 Thread.sleep(3000);
-                Personnel.click();
+                clickOn(Personnel);
+                log.info("¨Profil compte choisie");
                 Thread.sleep(3000);
+                currentURL = driver.getCurrentUrl();
+                js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+                clickOn(CpartiBtnperso);
+                Thread.sleep(3000);
+                clickOn(InscriveBtnperso);
+                break;
 
-                currentURL = driverG.getCurrentUrl();
-                personURL = "https://welcome.assessfirst.com/register/personal";
-                Thread.sleep(4000);
             case "Entreprise":
-                entrepriseURL = "https://welcome.assessfirst.com/register/business";
+                //Thread.sleep(3000);
+                clickOn(Entreprise);
+                currentURL = driver.getCurrentUrl();
                 Thread.sleep(3000);
-                 Entreprise.click();
-                currentURL = driverG.getCurrentUrl();
+                log.info("¨Profil compte Entreprise choisie");
+                js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+                clickOn(CpartiBtnperso);
                 Thread.sleep(3000);
+                clickOn(InscriveBtnperso);
 
+                break;
+            default:
+                throw new IllegalStateException("Valeur inappropriée: " + choix);
         }
     }
 
@@ -117,39 +143,53 @@ public class PageCreationCompte extends Page {
     }
 
     public void WriteInformationaccount(String choix, String emailtxt, String mdptxt, String confirmpwd) throws InterruptedException {
-        driverG = creapage.driverG;
+        //driverG = creapage.driverG;
 
-        driverG.get(RegisterURL);
+        driver.get(RegisterURL);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         switch (choix) {
-            case "personnel":
-                clickOn(CpartiBtnperso);
-                Thread.sleep(3000);
-                clickOn(InscriveBtnperso);
-                Thread.sleep(3000);
+            case "Personnel":
+//                clickOn(CpartiBtnperso);
+//                Thread.sleep(3000);
+//                clickOn(InscriveBtnperso);
+//                Thread.sleep(5000);
+                driver.get(CREATIONPersoURL);
                 writeText(InputEmail, emailtxt);
                 writeText(InputMotpasse, mdptxt);
                 writeText(InputConfirmMotpasse, confirmpwd);
-                clickOn(InscriveBtnperso);
-                currentURL = driverG.getCurrentUrl();
+                clickOn(InscrireBtn);
+                currentURL = driver.getCurrentUrl();
 
-            case "entreprise":
-                clickOn(CpartiBtnperso);
-                Thread.sleep(3000);
-                clickOn(InscriveBtnperso);
-                Thread.sleep(3000);
+            case "Entreprise":
+//                clickOn(CpartiBtnperso);
+//                Thread.sleep(3000);
+//                clickOn(InscriveBtnperso);
+//                Thread.sleep(3000);
+                driver.get(CREATIONEnterpriseURL);
+                Thread.sleep(4000);
 
+                writeText(InputEmailEnterprise, emailtxt);
+                writeText(InputMotpasse, mdptxt);
+                writeText(InputConfirmMotpasse, confirmpwd);
+                clickOn(InscrireBtn);
+                currentURL = driver.getCurrentUrl();
+
+                // break;
+            default:
+                throw new IllegalStateException("Aucun choix de profil : " + choix);
         }
     }
 
     public void ValidationInfoCompte() {
-
-        System.out.println("Accès ok");
+        System.out.println(ReturnTitle());
+        clickOn(InscriptionCredBtnperso);
+        currentURL = driver.getCurrentUrl();
     }
 
-    public void ConfigProfil() {
-
+    public void ConfigProfil() throws InterruptedException {
+        Thread.sleep(6000);
+        
     }
 
     public Page getCreapage() {
